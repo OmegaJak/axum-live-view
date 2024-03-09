@@ -1,8 +1,8 @@
-use axum::{async_trait, response::IntoResponse, routing::get, Router};
+use axum::{response::IntoResponse, routing::get, Router};
 use axum_live_view::{
     event_data::EventData, html, live_view::Updated, Html, LiveView, LiveViewUpgrade,
 };
-use std::{convert::Infallible, net::SocketAddr};
+use std::net::SocketAddr;
 
 #[tokio::main]
 async fn main() {
@@ -13,10 +13,8 @@ async fn main() {
         .route("/bundle.js", axum_live_view::precompiled_js());
 
     let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
-    axum::Server::bind(&addr)
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
+    let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
+    axum::serve(listener, app.into_make_service()).await.unwrap()
 }
 
 async fn root(live: LiveViewUpgrade) -> impl IntoResponse {

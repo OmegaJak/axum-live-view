@@ -336,9 +336,8 @@ pub const PRECOMPILED_JS: &str = include_str!("../../assets-precompiled/axum_liv
 #[cfg(feature = "precompiled-js")]
 #[cfg_attr(docsrs, doc(cfg(feature = "precompiled-js")))]
 #[allow(clippy::declare_interior_mutable_const)]
-pub fn precompiled_js<S, B>() -> axum::routing::MethodRouter<S, B>
+pub fn precompiled_js<S>() -> axum::routing::MethodRouter<S>
 where
-    B: axum::body::HttpBody + Send + 'static,
     S: Clone + Send + Sync + 'static,
 {
     use axum::{

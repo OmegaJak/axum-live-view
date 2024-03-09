@@ -13,7 +13,6 @@ use axum_live_view::{
 };
 use serde::{Deserialize, Serialize};
 use std::{
-    convert::Infallible,
     net::SocketAddr,
     sync::{Arc, Mutex},
 };
@@ -38,10 +37,8 @@ async fn main() {
         );
 
     let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
-    axum::Server::bind(&addr)
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
+    let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
+    axum::serve(listener, app.into_make_service()).await.unwrap()
 }
 
 type Messages = Arc<Mutex<Vec<Message>>>;
